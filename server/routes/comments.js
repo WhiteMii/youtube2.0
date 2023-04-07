@@ -1,15 +1,23 @@
 import express from "express";
-import {
-  addComment,
-  deleteComment,
-  getComments,
-} from "../controllers/comment.js";
-import { verifyToken } from "../verifyToken.js";
+import { authHandler } from "../middlewares/auth-middleware.js";
+import CommentController from "../controllers/comment-controller.js";
 
 const router = express.Router();
-
-router.post("/", verifyToken, addComment);
-router.delete("/:id", verifyToken, deleteComment);
-router.get("/:videoId", getComments);
+// ADD COMMENT
+router.post("/:id", authHandler, CommentController.addComment);
+// UPDATE COMMENT
+router.put(
+  "/:videoId/:commentId",
+  authHandler,
+  CommentController.updateComment
+);
+// DELETE COMMENT
+router.delete(
+  "/:videoId/:commentId",
+  authHandler,
+  CommentController.deleteComment
+);
+// GET ALL COMMENTS
+router.get("/:videoId", CommentController.getComments);
 
 export default router;
